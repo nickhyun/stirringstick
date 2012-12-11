@@ -9,7 +9,7 @@ import android.widget.Button;
 import com.skp.openplatform.android.sdk.common.BaseActivity;
 import com.skp.openplatform.android.sdk.oauth.OAuthInfoManager;
 import com.skp.openplatform.android.sdk.oauth.OAuthListener;
-import com.skp.openplatform.android.sdk.oauth.SKPOPException;
+import com.skp.openplatform.android.sdk.oauth.PlanetXOAuthException;
 
 public class Main extends BaseActivity implements OnClickListener {
 
@@ -85,7 +85,7 @@ public class Main extends BaseActivity implements OnClickListener {
 		case R.id.MAIN_BTN_LOGIN: {
 			try {
 				OAuthInfoManager.login(this, oauthlis);
-			} catch (SKPOPException e) {
+			} catch (PlanetXOAuthException e) {
 				e.printStackTrace();
 			}
 			break;

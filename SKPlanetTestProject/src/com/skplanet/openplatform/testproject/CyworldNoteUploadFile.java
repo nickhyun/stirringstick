@@ -16,23 +16,24 @@ import android.widget.TextView;
 
 import com.skp.openplatform.android.sdk.api.APIRequest;
 import com.skp.openplatform.android.sdk.common.BaseActivity;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKConstants.CONTENT_TYPE;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKConstants.HttpMethod;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKException;
 import com.skp.openplatform.android.sdk.common.RequestBundle;
 import com.skp.openplatform.android.sdk.common.RequestListener;
 import com.skp.openplatform.android.sdk.common.ResponseMessage;
-import com.skp.openplatform.android.sdk.oauth.Constants.CONTENT_TYPE;
-import com.skp.openplatform.android.sdk.oauth.Constants.HttpMethod;
-import com.skp.openplatform.android.sdk.oauth.SKPOPException;
 
 public class CyworldNoteUploadFile extends BaseActivity implements OnClickListener {
 
-	//API Call
+	// API Call
 	APIRequest api;
 	RequestBundle requestBundle;
-	
+
 	final String USERID = "67324899";
-	
+
 	// Comm Data
-	String URL = Const.SERVER + "/cyworld/note/"+USERID+"/imageupload"; // Image Upload
+	String URL = Const.SERVER + "/cyworld/note/" + USERID + "/imageupload"; // Image
+																			// Upload
 	Map<String, Object> param;
 
 	// UI
@@ -84,29 +85,26 @@ public class CyworldNoteUploadFile extends BaseActivity implements OnClickListen
 		}
 
 	}
-	
-	
-	public void initRequestBundle()
-	{
+
+	public void initRequestBundle() {
 		param = new HashMap<String, Object>();
 		param.put("version", "1");
-		
+
 		File f = new File("/sdcard/sat.jpg");
-		
+
 		requestBundle = new RequestBundle();
 		requestBundle.setUrl(URL);
 		requestBundle.setParameters(param);
 		requestBundle.setHttpMethod(HttpMethod.POST);
 		requestBundle.setResponseType(CONTENT_TYPE.JSON);
-		requestBundle.setUploadFile("image",f);
-		
+		requestBundle.setUploadFile("image", f);
+
 	}
-	
-	public void requestSync()
-	{
+
+	public void requestSync() {
 		api = new APIRequest();
 		initRequestBundle();
-		
+
 		ResponseMessage result = new ResponseMessage();
 		try {
 			result = api.request(requestBundle);
@@ -115,68 +113,64 @@ public class CyworldNoteUploadFile extends BaseActivity implements OnClickListen
 			setResult(e.toString());
 		} catch (IOException e) {
 			setResult(e.toString());
-		} catch (SKPOPException e) {
+		} catch (PlanetXSDKException e) {
 			setResult(e.toString());
 		}
 	}
-	
-	public void clearResult()
-	{
+
+	public void clearResult() {
 		setResult("");
 	}
-	
-	public void setResult(String result)
-	{
+
+	public void setResult(String result) {
 		tvResult.setText(result);
 	}
-	
-	public void requestASync()
-	{
+
+	public void requestASync() {
 		api = new APIRequest();
 		initRequestBundle();
-		
+
 		try {
 			api.request(requestBundle, reqListener);
-		} catch (SKPOPException e) {
+		} catch (PlanetXSDKException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	String hndResult = "";
-	
-	Handler msgHandler = new Handler(){
+
+	Handler msgHandler = new Handler() {
 		public void dispatchMessage(Message msg) {
 			setResult(hndResult);
 		};
 	};
-	
+
 	RequestListener reqListener = new RequestListener() {
-		
-		@Override
-		public void onSKPOPException(SKPOPException e) {
-			hndResult = e.toString();
-			msgHandler.sendEmptyMessage(0);
-		}
-		
+
 		@Override
 		public void onMalformedURLException(MalformedURLException e) {
 			hndResult = e.toString();
 			msgHandler.sendEmptyMessage(0);
 		}
-		
+
 		@Override
 		public void onIOException(IOException e) {
 			hndResult = e.toString();
 			msgHandler.sendEmptyMessage(0);
 		}
-		
+
 		@Override
 		public void onComplete(ResponseMessage result) {
 			hndResult = result.getStatusCode() + "\n" + result.toString();
 			msgHandler.sendEmptyMessage(0);
 		}
+
+		@Override
+		public void onPlanetSDKException(com.skp.openplatform.android.sdk.common.PlanetXSDKException e) {
+			hndResult = e.toString();
+			msgHandler.sendEmptyMessage(0);
+
+		}
 	};
-	
-	
+
 }

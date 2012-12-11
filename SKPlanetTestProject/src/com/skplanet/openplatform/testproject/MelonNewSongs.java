@@ -15,12 +15,12 @@ import android.widget.TextView;
 
 import com.skp.openplatform.android.sdk.api.APIRequest;
 import com.skp.openplatform.android.sdk.common.BaseActivity;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKConstants.CONTENT_TYPE;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKConstants.HttpMethod;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKException;
 import com.skp.openplatform.android.sdk.common.RequestBundle;
 import com.skp.openplatform.android.sdk.common.RequestListener;
 import com.skp.openplatform.android.sdk.common.ResponseMessage;
-import com.skp.openplatform.android.sdk.oauth.Constants.CONTENT_TYPE;
-import com.skp.openplatform.android.sdk.oauth.Constants.HttpMethod;
-import com.skp.openplatform.android.sdk.oauth.SKPOPException;
 
 public class MelonNewSongs extends BaseActivity implements OnClickListener {
 
@@ -110,7 +110,7 @@ public class MelonNewSongs extends BaseActivity implements OnClickListener {
 			setResult(e.toString());
 		} catch (IOException e) {
 			setResult(e.toString());
-		} catch (SKPOPException e) {
+		} catch (PlanetXSDKException e) {
 			setResult(e.toString());
 		}
 	}
@@ -132,7 +132,7 @@ public class MelonNewSongs extends BaseActivity implements OnClickListener {
 		
 		try {
 			api.request(requestBundle, reqListener);
-		} catch (SKPOPException e) {
+		} catch (PlanetXSDKException e) {
 			e.printStackTrace();
 		}
 	}
@@ -149,7 +149,7 @@ public class MelonNewSongs extends BaseActivity implements OnClickListener {
 	RequestListener reqListener = new RequestListener() {
 		
 		@Override
-		public void onSKPOPException(SKPOPException e) {
+		public void onPlanetSDKException(PlanetXSDKException e) {
 			hndResult = e.toString();
 			msgHandler.sendEmptyMessage(0);
 		}

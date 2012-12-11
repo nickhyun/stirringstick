@@ -15,12 +15,13 @@ import android.widget.TextView;
 
 import com.skp.openplatform.android.sdk.api.APIRequest;
 import com.skp.openplatform.android.sdk.common.BaseActivity;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKConstants.CONTENT_TYPE;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKConstants.HttpMethod;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKException;
 import com.skp.openplatform.android.sdk.common.RequestBundle;
 import com.skp.openplatform.android.sdk.common.RequestListener;
 import com.skp.openplatform.android.sdk.common.ResponseMessage;
-import com.skp.openplatform.android.sdk.oauth.Constants.CONTENT_TYPE;
-import com.skp.openplatform.android.sdk.oauth.Constants.HttpMethod;
-import com.skp.openplatform.android.sdk.oauth.SKPOPException;
+import com.skp.openplatform.android.sdk.oauth.PlanetXOAuthException;
 
 public class CyworldNoteDeleteArticle extends BaseActivity implements OnClickListener {
 
@@ -111,7 +112,7 @@ public class CyworldNoteDeleteArticle extends BaseActivity implements OnClickLis
 			setResult(e.toString());
 		} catch (IOException e) {
 			setResult(e.toString());
-		} catch (SKPOPException e) {
+		} catch (PlanetXSDKException e) {
 			setResult(e.toString());
 		}
 	}
@@ -133,7 +134,7 @@ public class CyworldNoteDeleteArticle extends BaseActivity implements OnClickLis
 		
 		try {
 			api.request(requestBundle, reqListener);
-		} catch (SKPOPException e) {
+		} catch (PlanetXSDKException e) {
 			e.printStackTrace();
 		}
 	}
@@ -150,12 +151,6 @@ public class CyworldNoteDeleteArticle extends BaseActivity implements OnClickLis
 	RequestListener reqListener = new RequestListener() {
 		
 		@Override
-		public void onSKPOPException(SKPOPException e) {
-			hndResult = e.toString();
-			msgHandler.sendEmptyMessage(0);
-		}
-		
-		@Override
 		public void onMalformedURLException(MalformedURLException e) {
 			hndResult = e.toString();
 			msgHandler.sendEmptyMessage(0);
@@ -170,6 +165,12 @@ public class CyworldNoteDeleteArticle extends BaseActivity implements OnClickLis
 		@Override
 		public void onComplete(ResponseMessage result) {
 			hndResult = result.getStatusCode() + "\n" + result.toString();
+			msgHandler.sendEmptyMessage(0);
+		}
+
+		@Override
+		public void onPlanetSDKException(PlanetXSDKException e) {
+			hndResult = e.toString();
 			msgHandler.sendEmptyMessage(0);
 		}
 	};
